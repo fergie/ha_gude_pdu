@@ -1,0 +1,81 @@
+{
+  "misc": {
+    "product_name": "Expert Power Control 8041-1",
+    "vendor_name": "GUDE Systems",
+    "prodid": "80xxR2",
+    "firm_v": "1.5.0-R2",
+    "def_hostname": "EPC-80xx",
+    "hostname": "epc8041",
+    "uptime": 23625
+  },
+  "ethernet": {
+    "mac": "00:19:32:01:a3:3e"
+  },
+  "outputs": [
+    { "name": "Power Port 1", "state": 1, "type": 1 },
+    { "name": "Power Port 2", "state": 0, "type": 1 },
+    { "name": "Power Port 3", "state": 0, "type": 1 },
+    { "name": "Power Port 4", "state": 1, "type": 1 }
+  ],
+  "sensor_descr": [
+    {
+      "type": 9,
+      "num": 1,
+      "fields": [
+        { "name": "Voltage", "unit": "V", "decPrecision": 3 },
+        { "name": "Current", "unit": "A", "decPrecision": 3 },
+        { "name": "Frequency", "unit": "Hz", "decPrecision": 2 },
+        { "name": "ActivePower", "unit": "W", "decPrecision": 1 },
+        { "name": "ApparentPower", "unit": "VA", "decPrecision": 1 },
+        { "name": "ReactivePower", "unit": "VAR", "decPrecision": 1 },
+        { "name": "PowerFactor", "unit": "", "decPrecision": 3 },
+        { "name": "Residual Current", "unit": "A", "decPrecision": 4 },
+        { "name": "AbsActEnergyRes", "unit": "kWh", "decPrecision": 3 }
+      ],
+      "properties": [{ "id": "L1", "name": "Meter1", "state": 1 }]
+    },
+    {
+      "type": 20,
+      "num": 1,
+      "groups": [
+        {
+          "fields": [
+            { "name": "Vsystem", "unit": "V", "decPrecision": 3 },
+            { "name": "Tcpu", "unit": "deg C", "decPrecision": 1 }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "id": "System",
+          "name": "",
+          "groups": [[{ "id": "I1", "name": "Internal" }]]
+        }
+      ]
+    }
+  ],
+  "sensor_values": [
+    {
+      "type": 9,
+      "num": 1,
+      "values": [
+        [
+          { "v": 240.62 },
+          { "v": 1.25 },
+          { "v": 50.0 },
+          { "v": 300.0 },
+          { "v": 300.5 },
+          { "v": 15.0 },
+          { "v": 0.99 },
+          { "v": 0.002 },
+          { "v": 45.123 }
+        ]
+      ]
+    },
+    {
+      "type": 20,
+      "num": 1,
+      "values": [[[[{ "v": 3.3 }, { "v": 42.5 }]]]]
+    }
+  ]
+}

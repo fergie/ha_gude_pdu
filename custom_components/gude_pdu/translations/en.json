@@ -1,0 +1,92 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "Device is already configured",
+      "different_device": "The entered device does not match the configured device.",
+      "reauth_successful": "Re-authentication was successful",
+      "reconfigure_successful": "Re-configuration was successful"
+    },
+    "error": {
+      "cannot_connect": "Failed to connect",
+      "invalid_auth": "Invalid authentication",
+      "unknown": "Unexpected error"
+    },
+    "step": {
+      "reauth_confirm": {
+        "data": {
+          "password": "Password",
+          "username": "Username"
+        },
+        "data_description": {
+          "password": "The password for the GUDE PDU web interface.",
+          "username": "The username for the GUDE PDU web interface."
+        },
+        "description": "Reauthenticate with your GUDE PDU at {host}."
+      },
+      "reconfigure": {
+        "data": {
+          "host": "Host",
+          "password": "Password",
+          "port": "Port",
+          "ssl": "Uses an SSL certificate",
+          "username": "Username",
+          "verify_ssl": "Verify SSL certificate"
+        },
+        "data_description": {
+          "host": "The hostname or IP address of the GUDE PDU on your network.",
+          "password": "The password for the GUDE PDU web interface.",
+          "port": "The HTTP or HTTPS port number of the GUDE PDU.",
+          "ssl": "Whether to use HTTPS to connect to the GUDE PDU.",
+          "username": "The username for the GUDE PDU web interface.",
+          "verify_ssl": "Whether to verify the SSL certificate."
+        },
+        "description": "Reconfigure your GUDE PDU connection settings."
+      },
+      "user": {
+        "data": {
+          "host": "Host",
+          "password": "Password",
+          "port": "Port",
+          "ssl": "Uses an SSL certificate",
+          "username": "Username",
+          "verify_ssl": "Verify SSL certificate"
+        },
+        "data_description": {
+          "host": "The hostname or IP address of the GUDE PDU on your network.",
+          "password": "The password for the GUDE PDU web interface.",
+          "port": "The HTTP or HTTPS port number of the GUDE PDU.",
+          "ssl": "Whether to use HTTPS to connect to the GUDE PDU.",
+          "username": "The username for the GUDE PDU web interface.",
+          "verify_ssl": "Whether to verify the SSL certificate."
+        },
+        "description": "Connect to your GUDE PDU using its HTTP(S) JSON API."
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "uptime": {
+        "name": "Uptime"
+      }
+    },
+    "switch": {
+      "outlet": {
+        "name": "Outlet {port}"
+      }
+    }
+  },
+  "exceptions": {
+    "auth_failed": {
+      "message": "Authentication failed: {error}"
+    },
+    "turn_off_failed": {
+      "message": "Failed to turn off outlet {port}: {error}"
+    },
+    "turn_on_failed": {
+      "message": "Failed to turn on outlet {port}: {error}"
+    },
+    "update_failed": {
+      "message": "Error communicating with GUDE PDU: {error}"
+    }
+  }
+}

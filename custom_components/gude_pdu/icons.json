@@ -1,0 +1,15 @@
+{
+  "entity": {
+    "sensor": {
+      "uptime": {
+        "default": "mdi:timer-outline"
+      }
+    },
+    "switch": {
+      "outlet": {
+        "default": "mdi:power-socket"
+      }
+    }
+  }
+}
+

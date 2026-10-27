@@ -1,0 +1,37 @@
+{
+  "misc": {
+    "product_name": "Expert Power Control 8291-1",
+    "vendor_name": "GUDE Systems",
+    "prodid": "8291",
+    "firm_v": "1.4.0",
+    "def_hostname": "EPC-8291",
+    "hostname": "epc8291",
+    "uptime": 50000
+  },
+  "ethernet": {
+    "mac": "00:19:32:02:b4:4f"
+  },
+  "outputs": [
+    { "name": "Power Port 1", "state": 0, "type": 1 },
+    { "name": "Power Port 2", "state": 1, "type": 1 }
+  ],
+  "sensor_descr": [
+    {
+      "type": 53,
+      "num": 1,
+      "fields": [
+        { "name": "Temperature", "unit": "deg C", "decPrecision": 1 },
+        { "name": "Humidity", "unit": "%", "decPrecision": 1 },
+        { "name": "Pressure", "unit": "hPa", "decPrecision": 1 }
+      ],
+      "properties": [{ "id": "1", "name": "Sensor 7106", "state": 1 }]
+    }
+  ],
+  "sensor_values": [
+    {
+      "type": 53,
+      "num": 1,
+      "values": [[{ "v": 21.5 }, { "v": 45.0 }, { "v": 1013.2 }]]
+    }
+  ]
+}

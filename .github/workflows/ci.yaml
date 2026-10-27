@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+
+permissions:
+  contents: read
+
+jobs:
+  hassfest:
+    name: "Hassfest Validation"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
+
+      - name: "Run hassfest validation"
+        uses: "home-assistant/actions/hassfest@26d56ed1a1cbfeabf59feb7b26e368e13f47ef52" # master
+
+  hacs:
+    name: "HACS Validation"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
+
+      - name: "Run HACS validation"
+        uses: "hacs/action@d556e736723344f83838d08488c983a15381059a" # v22.5.0
+        with:
+          category: "integration"
+
+  lint:
+    name: "Ruff & Codespell"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
+
+      - name: "Set up uv"
+        uses: "astral-sh/setup-uv@v6"
+
+      - name: "Install dependencies"
+        run: uv sync --frozen
+
+      - name: "Run ruff check"
+        run: uv run ruff check .
+
+      - name: "Run ruff format check"
+        run: uv run ruff format --check .
+
+      - name: "Run codespell"
+        run: uv run codespell
+
+  typecheck:
+    name: "Mypy Type Check"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
+
+      - name: "Set up uv"
+        uses: "astral-sh/setup-uv@v6"
+
+      - name: "Install dependencies"
+        run: uv sync --frozen
+
+      - name: "Run mypy"
+        run: uv run mypy custom_components/gude_pdu tests
+
+  pytest:
+    name: "Pytest & Coverage"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
+
+      - name: "Set up uv"
+        uses: "astral-sh/setup-uv@v6"
+
+      - name: "Install dependencies"
+        run: uv sync --frozen
+
+      - name: "Run pytest"
+        run: uv run pytest
+

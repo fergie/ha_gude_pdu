@@ -1,0 +1,306 @@
+# serializer version: 1
+# name: test_diagnostics
+  dict({
+    'config_entry': dict({
+      'host': '192.168.1.100',
+      'password': '**REDACTED**',
+      'port': 80,
+      'ssl': False,
+      'username': '**REDACTED**',
+      'verify_ssl': False,
+    }),
+    'device_info': dict({
+      'firmware_version': '1.5.0-R2',
+      'hostname': 'epc8041',
+      'mac': '**REDACTED**',
+      'product_name': 'Expert Power Control 8041-1',
+      'vendor_name': 'GUDE Systems',
+    }),
+    'outputs': dict({
+      '1': dict({
+        'name': 'Power Port 1',
+        'state': True,
+        'type': 1,
+      }),
+      '2': dict({
+        'name': 'Power Port 2',
+        'state': False,
+        'type': 1,
+      }),
+      '3': dict({
+        'name': 'Power Port 3',
+        'state': False,
+        'type': 1,
+      }),
+      '4': dict({
+        'name': 'Power Port 4',
+        'state': True,
+        'type': 1,
+      }),
+    }),
+    'raw_data': dict({
+      'ethernet': dict({
+        'mac': '**REDACTED**',
+      }),
+      'misc': dict({
+        'def_hostname': 'EPC-80xx',
+        'firm_v': '1.5.0-R2',
+        'hostname': 'epc8041',
+        'prodid': '80xxR2',
+        'product_name': 'Expert Power Control 8041-1',
+        'uptime': 23625,
+        'vendor_name': 'GUDE Systems',
+      }),
+      'outputs': list([
+        dict({
+          'name': 'Power Port 1',
+          'state': 1,
+          'type': 1,
+        }),
+        dict({
+          'name': 'Power Port 2',
+          'state': 0,
+          'type': 1,
+        }),
+        dict({
+          'name': 'Power Port 3',
+          'state': 0,
+          'type': 1,
+        }),
+        dict({
+          'name': 'Power Port 4',
+          'state': 1,
+          'type': 1,
+        }),
+      ]),
+      'sensor_descr': list([
+        dict({
+          'fields': list([
+            dict({
+              'decPrecision': 3,
+              'name': 'Voltage',
+              'unit': 'V',
+            }),
+            dict({
+              'decPrecision': 3,
+              'name': 'Current',
+              'unit': 'A',
+            }),
+            dict({
+              'decPrecision': 2,
+              'name': 'Frequency',
+              'unit': 'Hz',
+            }),
+            dict({
+              'decPrecision': 1,
+              'name': 'ActivePower',
+              'unit': 'W',
+            }),
+            dict({
+              'decPrecision': 1,
+              'name': 'ApparentPower',
+              'unit': 'VA',
+            }),
+            dict({
+              'decPrecision': 1,
+              'name': 'ReactivePower',
+              'unit': 'VAR',
+            }),
+            dict({
+              'decPrecision': 3,
+              'name': 'PowerFactor',
+              'unit': '',
+            }),
+            dict({
+              'decPrecision': 4,
+              'name': 'Residual Current',
+              'unit': 'A',
+            }),
+            dict({
+              'decPrecision': 3,
+              'name': 'AbsActEnergyRes',
+              'unit': 'kWh',
+            }),
+          ]),
+          'num': 1,
+          'properties': list([
+            dict({
+              'id': 'L1',
+              'name': 'Meter1',
+              'state': 1,
+            }),
+          ]),
+          'type': 9,
+        }),
+        dict({
+          'groups': list([
+            dict({
+              'fields': list([
+                dict({
+                  'decPrecision': 3,
+                  'name': 'Vsystem',
+                  'unit': 'V',
+                }),
+                dict({
+                  'decPrecision': 1,
+                  'name': 'Tcpu',
+                  'unit': 'deg C',
+                }),
+              ]),
+            }),
+          ]),
+          'num': 1,
+          'properties': list([
+            dict({
+              'groups': list([
+                list([
+                  dict({
+                    'id': 'I1',
+                    'name': 'Internal',
+                  }),
+                ]),
+              ]),
+              'id': 'System',
+              'name': '',
+            }),
+          ]),
+          'type': 20,
+        }),
+      ]),
+      'sensor_values': list([
+        dict({
+          'num': 1,
+          'type': 9,
+          'values': list([
+            list([
+              dict({
+                'v': 240.62,
+              }),
+              dict({
+                'v': 1.25,
+              }),
+              dict({
+                'v': 50.0,
+              }),
+              dict({
+                'v': 300.0,
+              }),
+              dict({
+                'v': 300.5,
+              }),
+              dict({
+                'v': 15.0,
+              }),
+              dict({
+                'v': 0.99,
+              }),
+              dict({
+                'v': 0.002,
+              }),
+              dict({
+                'v': 45.123,
+              }),
+            ]),
+          ]),
+        }),
+        dict({
+          'num': 1,
+          'type': 20,
+          'values': list([
+            list([
+              list([
+                list([
+                  dict({
+                    'v': 3.3,
+                  }),
+                  dict({
+                    'v': 42.5,
+                  }),
+                ]),
+              ]),
+            ]),
+          ]),
+        }),
+      ]),
+    }),
+    'sensors': dict({
+      '20_system_i1_tcpu': dict({
+        'name': 'System I1 Tcpu',
+        'precision': 1,
+        'sensor_type': 20,
+        'unit': 'deg C',
+        'value': 42.5,
+      }),
+      '20_system_i1_vsystem': dict({
+        'name': 'System I1 Vsystem',
+        'precision': 3,
+        'sensor_type': 20,
+        'unit': 'V',
+        'value': 3.3,
+      }),
+      '9_l1_absactenergyres': dict({
+        'name': 'L1 AbsActEnergyRes',
+        'precision': 3,
+        'sensor_type': 9,
+        'unit': 'kWh',
+        'value': 45.123,
+      }),
+      '9_l1_activepower': dict({
+        'name': 'L1 ActivePower',
+        'precision': 1,
+        'sensor_type': 9,
+        'unit': 'W',
+        'value': 300.0,
+      }),
+      '9_l1_apparentpower': dict({
+        'name': 'L1 ApparentPower',
+        'precision': 1,
+        'sensor_type': 9,
+        'unit': 'VA',
+        'value': 300.5,
+      }),
+      '9_l1_current': dict({
+        'name': 'L1 Current',
+        'precision': 3,
+        'sensor_type': 9,
+        'unit': 'A',
+        'value': 1.25,
+      }),
+      '9_l1_frequency': dict({
+        'name': 'L1 Frequency',
+        'precision': 2,
+        'sensor_type': 9,
+        'unit': 'Hz',
+        'value': 50.0,
+      }),
+      '9_l1_powerfactor': dict({
+        'name': 'L1 PowerFactor',
+        'precision': 3,
+        'sensor_type': 9,
+        'unit': '',
+        'value': 0.99,
+      }),
+      '9_l1_reactivepower': dict({
+        'name': 'L1 ReactivePower',
+        'precision': 1,
+        'sensor_type': 9,
+        'unit': 'VAR',
+        'value': 15.0,
+      }),
+      '9_l1_residual_current': dict({
+        'name': 'L1 Residual Current',
+        'precision': 4,
+        'sensor_type': 9,
+        'unit': 'A',
+        'value': 0.002,
+      }),
+      '9_l1_voltage': dict({
+        'name': 'L1 Voltage',
+        'precision': 3,
+        'sensor_type': 9,
+        'unit': 'V',
+        'value': 240.62,
+      }),
+    }),
+  })
+# ---
