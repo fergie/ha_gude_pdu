@@ -36,11 +36,11 @@ The integration polls the PDU locally (`local_polling`) every **30 seconds** for
 
 ## Installation
 
-### HACS
+### Marketplace
 
-1. Click the button below to open this repository in [HACS](https://www.hacs.xyz/):
+1. Click the button below to open this repository in the Home Assistant [Marketplace](https://www.home-assistant.io/integrations/marketplace/):
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=fergie&repository=ha_gude_pdu&category=Integration)
+[![Open your Home Assistant instance and open a repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=fergie&repository=ha_gude_pdu&category=Integration)
 
 2. Restart Home Assistant.
 3. Navigate to **Settings** -> **Devices & Services** -> **+ Add integration**.
@@ -69,7 +69,7 @@ The integration polls the PDU locally (`local_polling`) every **30 seconds** for
 
 1. Navigate to **Settings** -> **Devices & Services** and select the **GUDE PDU** integration.
 2. Click the three-dot menu next to the configured PDU entry and select **Delete**.
-3. If installed via HACS, remove the **GUDE PDU** integration from HACS (or delete `<config_dir>/custom_components/gude_pdu/` for manual installations) and restart Home Assistant.
+3. If installed via the Marketplace, remove the **GUDE PDU** integration from the Marketplace by opening the repository, selecting the three dots menu in the upper-right corner, then clicking **Remove**.  For manual installations, delete the `<config_dir>/custom_components/gude_pdu/` directory.  In both cases you should restart Home Assistant to complete the process.
 
 ## Use Cases & Automation Examples
 
