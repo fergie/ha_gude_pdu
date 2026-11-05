@@ -149,7 +149,7 @@ uv run mypy custom_components/gude_pdu tests
 
 ### Pre-commit Hooks
 
-A `.pre-commit-config.yaml` configuration is included to automatically run `ruff` (linting and formatting), `codespell`, and `mypy` before each commit:
+A `.pre-commit-config.yaml` configuration is included to automatically run `ruff` (linting and formatting), `codespell`, `mypy`, and release version checks before each commit:
 
 ```bash
 # Install the git pre-commit hook

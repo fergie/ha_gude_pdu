@@ -1,6 +1,6 @@
 [project]
 name = "ha-gude-pdu"
-version = "0.1.0"
+version = "0.1.2"
 description = "Home Assistant custom integration for GUDE Systems Power Distribution Units (PDUs)"
 readme = "README.md"
 license = { file = "LICENSE" }

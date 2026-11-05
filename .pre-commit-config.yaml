@@ -19,3 +19,47 @@ repos:
         language: system
         types: [python]
         pass_filenames: false
+      - id: check-release-version
+        name: check-release-version
+        entry: uv run python -c
+        language: system
+        files: ^(custom_components/gude_pdu/manifest\.json|pyproject\.toml)$
+        pass_filenames: false
+        args:
+          - |
+            import json
+            from pathlib import Path
+            import re
+            import sys
+            import tomllib
+
+            semver_re = re.compile(
+                r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
+                r"(?:(?:-|\.)?(?:a|b|rc|alpha|beta|dev)\d*(?:\.\d+)?)?$"
+            )
+
+            manifest = json.loads(
+                Path("custom_components/gude_pdu/manifest.json").read_text()
+            )
+            manifest_version = manifest.get("version")
+            if not isinstance(manifest_version, str) or not semver_re.match(
+                manifest_version
+            ):
+                sys.exit(
+                    f"Error: manifest.json version '{manifest_version}' is not a valid semantic version."
+                )
+
+            pyproject = tomllib.loads(Path("pyproject.toml").read_text())
+            pyproject_version = pyproject.get("project", {}).get("version")
+            if not isinstance(pyproject_version, str) or not semver_re.match(
+                pyproject_version
+            ):
+                sys.exit(
+                    f"Error: pyproject.toml version '{pyproject_version}' is not a valid semantic version."
+                )
+
+            if manifest_version != pyproject_version:
+                sys.exit(
+                    f"Error: manifest.json version '{manifest_version}' does not match "
+                    f"pyproject.toml version '{pyproject_version}'."
+                )
