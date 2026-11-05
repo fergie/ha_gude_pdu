@@ -3,7 +3,8 @@
   "name": "GUDE PDU",
   "categories": [
     "plugs_switches",
-    "energy.meters_monitoring"
+    "energy.meters_monitoring",
+    "computers_network.monitoring"
   ],
   "codeowners": ["@fergie"],
   "config_flow": true,
