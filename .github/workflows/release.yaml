@@ -1,0 +1,95 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: "CI Validation"
+    uses: "./.github/workflows/ci.yaml"
+
+  release:
+    name: "Publish GitHub Release"
+    needs: "ci"
+    runs-on: "ubuntu-latest"
+    permissions:
+      contents: write
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
+
+      - name: "Verify tag matches manifest.json and pyproject.toml"
+        id: verify_version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import re
+          import sys
+          import tomllib
+
+          tag = os.environ["TAG"]
+          if not tag.startswith("v"):
+              sys.exit(f"Error: Tag '{tag}' must start with 'v' (e.g. v0.1.0).")
+
+          version = tag[1:]
+          semver_re = re.compile(
+              r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
+              r"(?:(?:-|\.)?(?:a|b|rc|alpha|beta|dev)\d*(?:\.\d+)?)?$"
+          )
+          if not semver_re.match(version):
+              sys.exit(
+                  f"Error: Tag version '{version}' is not a valid semantic version."
+              )
+
+          manifest = json.loads(
+              Path("custom_components/gude_pdu/manifest.json").read_text()
+          )
+          manifest_version = manifest.get("version")
+          if manifest_version != version:
+              sys.exit(
+                  f"Error: Tag version '{version}' (from tag '{tag}') does not match "
+                  f"manifest.json version '{manifest_version}'."
+              )
+
+          pyproject = tomllib.loads(Path("pyproject.toml").read_text())
+          pyproject_version = pyproject.get("project", {}).get("version")
+          if pyproject_version != version:
+              sys.exit(
+                  f"Error: Tag version '{version}' (from tag '{tag}') does not match "
+                  f"pyproject.toml version '{pyproject_version}'."
+              )
+
+          is_prerelease = bool(
+              re.search(
+                  r"(?:-|\.)?(?:a|b|rc|alpha|beta|dev)\d*",
+                  version.split(".", 2)[2],
+              )
+          )
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a") as f:
+              f.write(f"version={version}\n")
+              f.write(f"prerelease={'true' if is_prerelease else 'false'}\n")
+          PY
+
+      - name: "Publish GitHub release"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+          PRERELEASE: ${{ steps.verify_version.outputs.prerelease }}
+        run: |
+          args=("$TAG" --verify-tag --title "$TAG" --generate-notes)
+          if [ "$PRERELEASE" = "true" ]; then
+            args+=(--prerelease)
+          else
+            args+=(--latest)
+          fi
+          gh release create "${args[@]}"
+

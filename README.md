@@ -182,6 +182,21 @@ docker run --rm --platform linux/amd64 \
   ghcr.io/hacs/action:main
 ```
 
+### Releases
+
+Releases are automated via `.github/workflows/release.yaml` following the [Home Assistant Marketplace Releases Guide](https://contributors.home-assistant.io/marketplace/guides/releases/):
+
+1. Update `"version"` in `custom_components/gude_pdu/manifest.json` and `version` in `pyproject.toml` (and `"homeassistant"` in `hacs.json` if the minimum required Home Assistant version changed).
+2. Commit and push the version bump to `main`.
+3. Tag the commit with a `v`-prefixed version matching `manifest.json` and push the tag:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+Pushing a `v*` tag runs the full CI validation suite (`hassfest`, `hacs`, `ruff`, `codespell`, `mypy`, and `pytest`), verifies that the tag matches `manifest.json` and `pyproject.toml`, and publishes a GitHub Release with generated release notes (automatically marking `a`/`b`/`rc`/`alpha`/`beta`/`dev` tags as pre-releases).
+
 ## Architecture & API References
 
 - [GUDE API Overview](https://wiki.gude-systems.com/API_Overview_eng)
