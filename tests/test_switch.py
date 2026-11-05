@@ -1,5 +1,6 @@
 """Test GUDE PDU switch platform."""  # codespell:ignore gude
 
+from typing import Any
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -14,6 +15,7 @@ from homeassistant.const import (
     SERVICE_TURN_ON,
     STATE_OFF,
     STATE_ON,
+    STATE_UNKNOWN,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
@@ -135,3 +137,24 @@ async def test_switch_error(
             {ATTR_ENTITY_ID: "switch.epc8041_outlet_1"},
             blocking=True,
         )
+
+
+@pytest.mark.usefixtures("mock_gude_pdu_client")
+async def test_switch_missing_outlet_on_update(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+    epc8041_fixture: dict[str, Any],
+) -> None:
+    """Test switch state is unknown if the outlet disappears from status outputs."""
+    await hass.config_entries.async_setup(mock_config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    coordinator = mock_config_entry.runtime_data.coordinator
+    no_outputs_fixture = {**epc8041_fixture, "outputs": []}
+    with patch.object(GudeClient, "_request", return_value=no_outputs_fixture):
+        await coordinator.async_refresh()
+        await hass.async_block_till_done()
+
+    state1 = hass.states.get("switch.epc8041_outlet_1")
+    assert state1 is not None
+    assert state1.state == STATE_UNKNOWN

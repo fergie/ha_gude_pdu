@@ -65,26 +65,34 @@ async def test_client_http_errors() -> None:
     """Test handling of HTTP error status codes."""
     session = MagicMock(spec=aiohttp.ClientSession)
 
-    # 401 Unauthorized
+    # 401 Unauthorized response status
     resp_401 = AsyncMock()
     resp_401.status = 401
-    resp_401.raise_for_status.side_effect = aiohttp.ClientResponseError(
-        request_info=MagicMock(), history=(), status=401
-    )
     session.get.return_value.__aenter__.return_value = resp_401
 
     client = _create_client(session=session)
     with pytest.raises(GudeAuthError):
         await client._request({"components": 1})
 
-    # 500 Server Error
+    # 500 Server Error response status
     resp_500 = AsyncMock()
     resp_500.status = 500
-    resp_500.raise_for_status.side_effect = aiohttp.ClientResponseError(
-        request_info=MagicMock(), history=(), status=500
-    )
     session.get.return_value.__aenter__.return_value = resp_500
     with pytest.raises(GudeError):
+        await client._request({"components": 1})
+
+    # ClientResponseError 401
+    session.get.side_effect = aiohttp.ClientResponseError(
+        request_info=MagicMock(), history=(), status=401
+    )
+    with pytest.raises(GudeAuthError):
+        await client._request({"components": 1})
+
+    # ClientResponseError 500
+    session.get.side_effect = aiohttp.ClientResponseError(
+        request_info=MagicMock(), history=(), status=500
+    )
+    with pytest.raises(GudeConnectionError):
         await client._request({"components": 1})
 
     # ClientError
@@ -418,3 +426,71 @@ async def test_client_invalid_json_and_missing_outputs() -> None:
 
     assert client._parse_outputs({"outputs": "not-a-list"}) == {}
     assert client._parse_outputs({"outputs": ["not-a-dict"]}) == {}
+
+
+async def test_client_set_outlet_state_unlisted_port() -> None:
+    """Test set_outlet_state returns requested state when port is not in response."""
+    session = MagicMock(spec=aiohttp.ClientSession)
+    resp = AsyncMock()
+    resp.status = 200
+    resp.text.return_value = '{"outputs":[]}'
+    session.post.return_value.__aenter__.return_value = resp
+
+    client = _create_client(session=session)
+    assert await client.set_outlet_state(9, False) is False
+
+
+async def test_client_parse_sensors_edge_cases() -> None:
+    """Test sensor parsing handles malformed and out-of-order structures."""
+    client = _create_client()
+
+    # Non-list sensor_descr or sensor_values
+    assert client._parse_sensors({"sensor_descr": "invalid", "sensor_values": []}) == {}
+
+    data = {
+        "sensor_descr": [
+            "not-a-dict",
+            {"no_type": True},
+            # Simple sensor with invalid fields/properties
+            {"type": 1, "fields": "not-a-list", "properties": []},
+            # Simple sensor with out-of-order value item and non-dict elements
+            {
+                "type": 2,
+                "fields": ["not-a-dict", {"name": "Temp", "unit": "C"}],
+                "properties": ["not-a-dict", {"id": "S1"}],
+            },
+            # Group sensor with invalid groups/properties
+            {"type": 3, "groups": "not-a-list", "properties": []},
+            # Group sensor with no matching value item and non-dict elements
+            {
+                "type": 4,
+                "groups": [
+                    "not-a-dict",
+                    {"fields": "not-a-list"},
+                    {"fields": ["not-a-dict", {"name": "VSystem", "unit": "V"}]},
+                ],
+                "properties": [
+                    "not-a-dict",
+                    {
+                        "id": "Sys",
+                        "groups": [
+                            [],
+                            [],
+                            ["not-a-dict", {"id": "I1"}],
+                        ],
+                    },
+                ],
+            },
+        ],
+        "sensor_values": [
+            "not-a-dict",
+            {"type": 99, "values": []},
+            {"type": 2, "values": [[], [None, {"v": 23.5}]]},
+        ],
+    }
+
+    sensors = client._parse_sensors(data)
+    assert "2_s1_temp" in sensors
+    assert sensors["2_s1_temp"].value == 23.5
+    assert "4_sys_i1_vsystem" in sensors
+    assert sensors["4_sys_i1_vsystem"].value is None

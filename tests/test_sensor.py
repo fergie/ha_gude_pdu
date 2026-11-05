@@ -221,3 +221,58 @@ def test_get_sensor_port_index() -> None:
         field_name="ActivePower",
     )
     assert _get_sensor_port_index(non_digit_sensor, outputs) is None
+
+
+async def test_sensor_missing_and_unrounded_values(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+    epc8041_fixture: dict[str, Any],
+) -> None:
+    """Test sensor native_value with integer/unrounded values and missing data."""
+    fixture_with_int = {
+        **epc8041_fixture,
+        "sensor_descr": [
+            *epc8041_fixture["sensor_descr"],
+            {
+                "type": 50,
+                "fields": [{"name": "AlertCount"}],
+                "properties": [{"id": "1"}],
+            },
+        ],
+        "sensor_values": [
+            *epc8041_fixture["sensor_values"],
+            {
+                "type": 50,
+                "values": [[{"v": 3}]],
+            },
+        ],
+    }
+
+    with patch.object(GudeClient, "_request", return_value=fixture_with_int):
+        await hass.config_entries.async_setup(mock_config_entry.entry_id)
+        await hass.async_block_till_done()
+
+    alert_state = hass.states.get("sensor.epc8041_1_alertcount")
+    assert alert_state is not None
+    assert alert_state.state == "3"
+
+    # Update coordinator with empty sensors and no misc uptime
+    coordinator = mock_config_entry.runtime_data.coordinator
+    empty_fixture = {
+        "ethernet": epc8041_fixture["ethernet"],
+        "misc": {"product_name": "Expert Power Control 8041-1"},
+        "outputs": [],
+        "sensor_descr": [],
+        "sensor_values": [],
+    }
+    with patch.object(GudeClient, "_request", return_value=empty_fixture):
+        await coordinator.async_refresh()
+        await hass.async_block_till_done()
+
+    alert_state = hass.states.get("sensor.epc8041_1_alertcount")
+    assert alert_state is not None
+    assert alert_state.state == "unknown"
+
+    uptime_state = hass.states.get("sensor.epc8041_uptime")
+    assert uptime_state is not None
+    assert uptime_state.state == "unknown"
