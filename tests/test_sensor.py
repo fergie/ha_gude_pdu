@@ -7,10 +7,14 @@ import pytest
 from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.gude_pdu.api import GudeClient, GudeSensorValue
-from custom_components.gude_pdu.sensor import _determine_sensor_description
+from custom_components.gude_pdu.const import DOMAIN
+from custom_components.gude_pdu.sensor import (
+    _determine_sensor_description,
+    _get_sensor_port_index,
+)
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import device_registry as dr, entity_registry as er
 
 
 @pytest.mark.usefixtures("mock_gude_pdu_client")
@@ -141,3 +145,79 @@ def test_determine_sensor_description_fallbacks() -> None:
     assert desc_custom.device_class is None
     assert desc_custom.native_unit_of_measurement == "rpm"
     assert desc_custom.state_class is SensorStateClass.MEASUREMENT
+
+
+async def test_outlet_sensors_attached_to_child_device(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+    epc8041_fixture: dict[str, Any],
+    device_registry: dr.DeviceRegistry,
+    entity_registry: er.EntityRegistry,
+) -> None:
+    """Test per-outlet sensors (type 8) attach to the outlet child device."""
+    fixture = {
+        **epc8041_fixture,
+        "sensor_descr": [
+            *epc8041_fixture["sensor_descr"],
+            {
+                "type": 8,
+                "num": 2,
+                "fields": [{"name": "ActivePower", "unit": "W", "decPrecision": 1}],
+                "properties": [
+                    {"id": "1", "name": "Power Port 1"},
+                    {"id": "99", "name": "Unmapped Port"},
+                ],
+            },
+        ],
+        "sensor_values": [
+            *epc8041_fixture["sensor_values"],
+            {
+                "type": 8,
+                "num": 2,
+                "values": [[{"v": 42.5}], [{"v": 10.0}]],
+            },
+        ],
+    }
+
+    with patch.object(GudeClient, "_request", return_value=fixture):
+        await hass.config_entries.async_setup(mock_config_entry.entry_id)
+        await hass.async_block_till_done()
+
+    outlet_power = hass.states.get("sensor.epc8041_outlet_1_activepower")
+    assert outlet_power is not None
+    assert outlet_power.state == "42.5"
+
+    entry = entity_registry.async_get("sensor.epc8041_outlet_1_activepower")
+    assert entry is not None
+    assert entry.device_id is not None
+    child_device = device_registry.async_get(entry.device_id)
+    assert isinstance(child_device, dr.ChildDeviceEntry)
+    assert child_device.identifiers == {(DOMAIN, "00:19:32:01:a3:3e_port_1")}
+
+
+def test_get_sensor_port_index() -> None:
+    """Test mapping outlet sensor metadata to port index."""
+    outputs = {1: object(), 2: object()}
+    outlet_sensor = GudeSensorValue(
+        sensor_id="8_1_activepower",
+        name="1 ActivePower",
+        value=10.0,
+        unit="W",
+        precision=1,
+        sensor_type=8,
+        property_id="1",
+        field_name="ActivePower",
+    )
+    assert _get_sensor_port_index(outlet_sensor, outputs) == 1
+
+    non_digit_sensor = GudeSensorValue(
+        sensor_id="8_p1_activepower",
+        name="P1 ActivePower",
+        value=10.0,
+        unit="W",
+        precision=1,
+        sensor_type=8,
+        property_id="P1",
+        field_name="ActivePower",
+    )
+    assert _get_sensor_port_index(non_digit_sensor, outputs) is None

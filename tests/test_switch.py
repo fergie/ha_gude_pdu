@@ -6,6 +6,7 @@ import pytest
 from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.gude_pdu.api import GudeClient, GudeConnectionError
+from custom_components.gude_pdu.const import DOMAIN
 from homeassistant.components.switch import DOMAIN as SWITCH_DOMAIN
 from homeassistant.const import (
     ATTR_ENTITY_ID,
@@ -16,16 +17,17 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
-from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import device_registry as dr, entity_registry as er
 
 
 @pytest.mark.usefixtures("mock_gude_pdu_client")
 async def test_switches(
     hass: HomeAssistant,
     mock_config_entry: MockConfigEntry,
+    device_registry: dr.DeviceRegistry,
     entity_registry: er.EntityRegistry,
 ) -> None:
-    """Test switch entities are created with correct states."""
+    """Test switch entities and outlet child devices are created with correct states."""
     await hass.config_entries.async_setup(mock_config_entry.entry_id)
     await hass.async_block_till_done()
 
@@ -40,6 +42,27 @@ async def test_switches(
     entry1 = entity_registry.async_get("switch.epc8041_outlet_1")
     assert entry1 is not None
     assert entry1.unique_id == "00:19:32:01:a3:3e_port_1"
+
+    parent_device = device_registry.async_get_device_by_identifier(
+        identifier=(DOMAIN, "00:19:32:01:a3:3e"),
+        config_entry_id=mock_config_entry.entry_id,
+    )
+    assert parent_device is not None
+
+    child_devices = dr.async_entries_for_parent_device(
+        device_registry, parent_device.id
+    )
+    assert len(child_devices) == 4
+
+    child_device1 = device_registry.async_get_child_device_by_identifier(
+        identifier=(DOMAIN, "00:19:32:01:a3:3e_port_1"),
+        config_entry_id=mock_config_entry.entry_id,
+    )
+    assert child_device1 is not None
+    assert entry1.device_id == child_device1.id
+    assert child_device1.parent_device_id == parent_device.id
+    assert child_device1.identifiers == {(DOMAIN, "00:19:32:01:a3:3e_port_1")}
+    assert child_device1.name == "Outlet 1"
 
 
 @pytest.mark.usefixtures("mock_gude_pdu_client")

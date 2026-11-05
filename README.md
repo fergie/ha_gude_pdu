@@ -16,7 +16,7 @@ This integration supports GUDE Systems Expert Power Control (EPC) and Expert Sen
 
 ## Features & Supported Functions
 
-- **Outlet Switching**: Individual switch entities (`SwitchDeviceClass.OUTLET`) for each switchable power port (`Outlet 1` .. `Outlet N`) with real-time state feedback.
+- **Outlet Child Devices & Switching**: Each switchable power port (`Outlet 1` .. `Outlet N`) is registered as a Home Assistant child device under the main PDU device, exposing an individual switch entity (`SwitchDeviceClass.OUTLET`) with real-time state feedback and any per-outlet telemetry sensors.
 - **Electrical Telemetry**: Automatic discovery of line, residual, and port sensors:
   - Voltage (V)
   - Current & Residual Current (A)

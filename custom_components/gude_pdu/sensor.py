@@ -1,5 +1,6 @@
 """Sensor platform for GUDE PDU devices."""  # codespell:ignore gude
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import override
 
@@ -246,6 +247,23 @@ def _determine_sensor_description(sensor: GudeSensorValue) -> SensorEntityDescri
     )
 
 
+_OUTLET_SENSOR_TYPES = frozenset({8, 17})
+
+
+def _get_sensor_port_index(
+    sensor: GudeSensorValue, outputs: Mapping[int, object]
+) -> int | None:
+    """Return the 1-based outlet port index if the sensor belongs to an outlet."""
+    if sensor.sensor_type not in _OUTLET_SENSOR_TYPES:
+        return None
+    prop_prefix = sensor.property_id.split("_", 1)[0].split(".", 1)[0]
+    if prop_prefix.isdigit():
+        port_idx = int(prop_prefix)
+        if port_idx in outputs:
+            return port_idx
+    return None
+
+
 PARALLEL_UPDATES = 0
 
 
@@ -280,12 +298,17 @@ class GudeSensor(GudeEntity, SensorEntity):
         description: SensorEntityDescription,
     ) -> None:
         """Initialise the sensor entity."""
-        super().__init__(coordinator, entry)
+        sensor = coordinator.data.sensors[sensor_id]
+        port_index = _get_sensor_port_index(sensor, coordinator.data.outputs)
+        super().__init__(coordinator, entry, port_index=port_index)
         self.sensor_id = sensor_id
         self.entity_description = description
         formatted_mac = dr.format_mac(coordinator.data.device_info.mac)
         self._attr_unique_id = f"{formatted_mac}_{sensor_id}"
-        self._attr_name = coordinator.data.sensors[sensor_id].name
+        if port_index is not None:
+            self._attr_name = sensor.name.removeprefix(f"{port_index} ")
+        else:
+            self._attr_name = sensor.name
 
     @property
     @override

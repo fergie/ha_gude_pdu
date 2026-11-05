@@ -63,15 +63,15 @@
       }
     }
   },
+  "device": {
+    "outlet": {
+      "name": "Outlet {port}"
+    }
+  },
   "entity": {
     "sensor": {
       "uptime": {
         "name": "Uptime"
-      }
-    },
-    "switch": {
-      "outlet": {
-        "name": "Outlet {port}"
       }
     }
   },

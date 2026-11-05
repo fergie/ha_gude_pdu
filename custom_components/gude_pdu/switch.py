@@ -33,6 +33,7 @@ class GudeOutletSwitch(GudeEntity, SwitchEntity):
     """Switch entity representing a PDU power outlet."""
 
     _attr_device_class = SwitchDeviceClass.OUTLET
+    _attr_name = None
     _attr_translation_key = "outlet"
 
     def __init__(
@@ -42,11 +43,10 @@ class GudeOutletSwitch(GudeEntity, SwitchEntity):
         port_index: int,
     ) -> None:
         """Initialise the outlet switch."""
-        super().__init__(coordinator, entry)
+        super().__init__(coordinator, entry, port_index=port_index)
         self.port_index = port_index
         formatted_mac = dr.format_mac(coordinator.data.device_info.mac)
         self._attr_unique_id = f"{formatted_mac}_port_{port_index}"
-        self._attr_translation_placeholders = {"port": str(port_index)}
 
     @property
     @override
