@@ -122,22 +122,64 @@ automation:
 
 ## Development & Testing
 
-This repository uses [uv](https://docs.astral.sh/uv/) for dependency management and testing:
+This repository uses [uv](https://docs.astral.sh/uv/) (with Python 3.14+) for dependency management, static analysis, and testing:
 
 ```bash
 # Install dependencies into .venv
 uv sync
 
-# Run pytest with coverage
+# Run pytest with coverage (enforces >= 95% coverage)
 uv run pytest
 
-# Run linting and formatting checks
+# Update Syrupy test snapshots (if diagnostics output intentionally changes)
+uv run pytest --snapshot-update
+
+# Run linting, formatting, and spell checks
 uv run ruff check .
 uv run ruff format --check .
 uv run codespell
 
+# Auto-fix lint issues and format code
+uv run ruff check --fix .
+uv run ruff format .
+
 # Run strict static type checking
 uv run mypy custom_components/gude_pdu tests
+```
+
+### Pre-commit Hooks
+
+A `.pre-commit-config.yaml` configuration is included to automatically run `ruff` (linting and formatting), `codespell`, and `mypy` before each commit:
+
+```bash
+# Install the git pre-commit hook
+uv run pre-commit install
+
+# Run all pre-commit hooks manually across all files
+uv run pre-commit run --all-files
+```
+
+### Continuous Integration (Hassfest & HACS)
+
+The CI GitHub Action (`.github/workflows/ci.yaml`) runs the full test suite (`pytest`, `ruff`, `codespell`, `mypy`, Hassfest, and HACS validation) on push and pull requests to `main`. To run Hassfest and HACS validations locally, use these commands from the repository root:
+
+Hassfest:
+
+```bash
+docker run --rm --platform linux/amd64 -v "$(pwd):/github/workspace" ghcr.io/home-assistant/hassfest
+```
+
+HACS:
+
+```bash
+docker run --rm --platform linux/amd64 \
+  -v "$(pwd):/github/workspace" \
+  -e GITHUB_WORKSPACE="/github/workspace" \
+  -e GITHUB_REPOSITORY="fergie/ha_gude_pdu" \
+  -e GITHUB_ACTOR="[GITHUB_USERNAME]" \
+  -e INPUT_CATEGORY="integration" \
+  -e INPUT_GITHUB_TOKEN="$(gh auth token)" \
+  ghcr.io/hacs/action:main
 ```
 
 ## Architecture & API References
