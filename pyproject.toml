@@ -13,22 +13,24 @@ dependencies = []
 [dependency-groups]
 dev = [
     "codespell>=2.4.1",
-    "homeassistant==2026.10.2",
+    "homeassistant==2026.11.0",
     "mypy>=1.18.0",
     "pre-commit>=4.3.0",
     "pytest>=9.0.0",
     "pytest-cov>=7.0.0",
-    "pytest-homeassistant-custom-component>=0.13.372",
+    "pytest-homeassistant==2026.11.0",
     "ruff>=0.14.0",
     "syrupy>=5.0.0",
 ]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
 norecursedirs = [".git", ".venv"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
-addopts = "--cov=custom_components.gude_pdu --cov-report=term-missing"
+# Let Home Assistant install its httpx alias before respx is imported.
+addopts = "-p no:respx --cov=custom_components.gude_pdu --cov-report=term-missing"
+pythonpath = ["."]
+testpaths = ["tests"]
 
 [tool.coverage.run]
 source = ["custom_components/gude_pdu"]

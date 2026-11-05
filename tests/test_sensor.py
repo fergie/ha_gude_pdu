@@ -4,7 +4,7 @@ from typing import Any
 from unittest.mock import patch
 
 import pytest
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.gude_pdu.api import GudeClient, GudeSensorValue
 from custom_components.gude_pdu.sensor import _determine_sensor_description

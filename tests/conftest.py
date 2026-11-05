@@ -5,7 +5,7 @@ from typing import Any, cast
 from unittest.mock import AsyncMock, patch
 
 import pytest
-from pytest_homeassistant_custom_component.common import (
+from pytest_homeassistant.common import (
     MockConfigEntry,
     load_json_object_fixture,
 )
@@ -15,13 +15,6 @@ from custom_components.gude_pdu.const import DOMAIN
 from homeassistant.core import HomeAssistant
 
 from .const import MOCK_CONFIG_ENTRY_DATA, MOCK_MAC
-
-
-@pytest.fixture(autouse=True)
-def auto_enable_custom_integrations(
-    enable_custom_integrations: None,
-) -> None:
-    """Enable custom integrations in all tests."""
 
 
 @pytest.fixture
