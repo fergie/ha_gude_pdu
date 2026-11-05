@@ -29,6 +29,10 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 # Let Home Assistant install its httpx alias before respx is imported.
 addopts = "-p no:respx --cov=custom_components.gude_pdu --cov-report=term-missing"
+filterwarnings = [
+    "ignore:Inheritance class HomeAssistantApplication from web\\.Application is discouraged:DeprecationWarning:homeassistant\\.components\\.http\\.server",
+    "ignore:'asyncio\\.iscoroutinefunction' is deprecated:DeprecationWarning:backoff\\..*",
+]
 pythonpath = ["."]
 testpaths = ["tests"]
 

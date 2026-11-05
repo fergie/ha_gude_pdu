@@ -81,6 +81,8 @@ rules:
     comment: This integration does not have stale devices to clean up.
 
   # Platinum
-  async-dependency: todo
+  async-dependency:
+    status: exempt
+    comment: This integration has no external dependencies.
   inject-websession: done
   strict-typing: done
