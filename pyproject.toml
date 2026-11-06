@@ -123,5 +123,5 @@ warn_unused_ignores = true
 
 [tool.codespell]
 ignore-words-list = "gude,hass"
-skip = ".git,.venv,__pycache__,*.ambr"
-
+# Skip git, venv, pycache, Syrupy snapshots and non-English translations
+skip = ".git,.venv,__pycache__,*.ambr,*/translations/[!e]*.json,*/translations/e[!n]*.json"

@@ -1,0 +1,92 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "Gerät ist bereits konfiguriert",
+      "different_device": "Das eingegebene Gerät stimmt nicht mit dem konfigurierten Gerät überein.",
+      "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+      "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+    },
+    "error": {
+      "cannot_connect": "Verbindung fehlgeschlagen",
+      "invalid_auth": "Ungültige Authentifizierung",
+      "unknown": "Unerwarteter Fehler"
+    },
+    "step": {
+      "reauth_confirm": {
+        "data": {
+          "password": "Passwort",
+          "username": "Benutzername"
+        },
+        "data_description": {
+          "password": "Das Passwort für die Weboberfläche der GUDE PDU.",
+          "username": "Der Benutzername für die Weboberfläche der GUDE PDU."
+        },
+        "description": "Authentifiziere dich erneut bei deiner GUDE PDU unter {host}."
+      },
+      "reconfigure": {
+        "data": {
+          "host": "Host",
+          "password": "Passwort",
+          "port": "Port",
+          "ssl": "Verwendet ein SSL-Zertifikat",
+          "username": "Benutzername",
+          "verify_ssl": "SSL-Zertifikat überprüfen"
+        },
+        "data_description": {
+          "host": "Der Hostname oder die IP-Adresse der GUDE PDU in deinem Netzwerk.",
+          "password": "Das Passwort für die Weboberfläche der GUDE PDU.",
+          "port": "Die HTTP- oder HTTPS-Portnummer der GUDE PDU.",
+          "ssl": "Gibt an, ob HTTPS für die Verbindung zur GUDE PDU verwendet werden soll.",
+          "username": "Der Benutzername für die Weboberfläche der GUDE PDU.",
+          "verify_ssl": "Gibt an, ob das SSL-Zertifikat überprüft werden soll."
+        },
+        "description": "Konfiguriere die Verbindungseinstellungen deiner GUDE PDU neu."
+      },
+      "user": {
+        "data": {
+          "host": "Host",
+          "password": "Passwort",
+          "port": "Port",
+          "ssl": "Verwendet ein SSL-Zertifikat",
+          "username": "Benutzername",
+          "verify_ssl": "SSL-Zertifikat überprüfen"
+        },
+        "data_description": {
+          "host": "Der Hostname oder die IP-Adresse der GUDE PDU in deinem Netzwerk.",
+          "password": "Das Passwort für die Weboberfläche der GUDE PDU.",
+          "port": "Die HTTP- oder HTTPS-Portnummer der GUDE PDU.",
+          "ssl": "Gibt an, ob HTTPS für die Verbindung zur GUDE PDU verwendet werden soll.",
+          "username": "Der Benutzername für die Weboberfläche der GUDE PDU.",
+          "verify_ssl": "Gibt an, ob das SSL-Zertifikat überprüft werden soll."
+        },
+        "description": "Verbinde dich über die HTTP(S)-JSON-API mit deiner GUDE PDU."
+      }
+    }
+  },
+  "device": {
+    "outlet": {
+      "name": "Steckdose {port}"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "uptime": {
+        "name": "Betriebszeit"
+      }
+    }
+  },
+  "exceptions": {
+    "auth_failed": {
+      "message": "Authentifizierung fehlgeschlagen: {error}"
+    },
+    "turn_off_failed": {
+      "message": "Steckdose {port} konnte nicht ausgeschaltet werden: {error}"
+    },
+    "turn_on_failed": {
+      "message": "Steckdose {port} konnte nicht eingeschaltet werden: {error}"
+    },
+    "update_failed": {
+      "message": "Fehler bei der Kommunikation mit der GUDE PDU: {error}"
+    }
+  }
+}
