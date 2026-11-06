@@ -22,10 +22,6 @@ repos:
       - id: detect-private-key
       - id: forbid-submodules
       - id: mixed-line-ending
-      - id: pretty-format-json
-        args:
-          - --autofix
-          - --no-sort-keys
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.17.3
     hooks:

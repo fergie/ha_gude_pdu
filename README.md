@@ -149,7 +149,7 @@ uv run mypy custom_components/gude_pdu tests
 
 ### Pre-commit Hooks
 
-A `.pre-commit-config.yaml` configuration is included to automatically run `ruff` (linting and formatting), `codespell`, `mypy`, release version checks, and [Conventional Commits](https://www.conventionalcommits.org/) commit message validation (`conventional-pre-commit`) before each commit:
+A `.pre-commit-config.yaml` configuration is included to automatically run `pre-commit-hooks`, `ruff` (linting and formatting), `codespell`, `mypy`, release version checks, and [Conventional Commits](https://www.conventionalcommits.org/) commit message validation (`conventional-pre-commit`) before each commit:
 
 ```bash
 # Install the git pre-commit and commit-msg hooks
@@ -161,7 +161,7 @@ uv run pre-commit run --all-files
 
 ### Continuous Integration (Hassfest & HACS)
 
-The CI GitHub Action (`.github/workflows/ci.yaml`) runs the full test suite (`pytest`, `ruff`, `codespell`, `mypy`, Hassfest, and HACS validation) on push and pull requests to `main`. To run Hassfest and HACS validations locally, use these commands from the repository root:
+The CI GitHub Action (`.github/workflows/ci.yaml`) runs the full validation suite (`pytest`, `pre-commit`, `ruff`, `codespell`, `mypy`, Hassfest, and HACS validation) on push and pull requests to `main`. To run Hassfest and HACS validations locally, use these commands from the repository root:
 
 Hassfest:
 

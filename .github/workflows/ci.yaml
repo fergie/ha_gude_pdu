@@ -14,27 +14,32 @@ permissions:
   contents: read
 
 jobs:
-  hassfest:
-    name: "Hassfest Validation"
+  pre-commit:
+    name: "Pre-commit Checks"
     runs-on: "ubuntu-latest"
     steps:
       - name: "Checkout repository"
         uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
-
-      - name: "Run hassfest validation"
-        uses: "home-assistant/actions/hassfest@26d56ed1a1cbfeabf59feb7b26e368e13f47ef52" # master
-
-  hacs:
-    name: "HACS Validation"
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Checkout repository"
-        uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
-
-      - name: "Run HACS validation"
-        uses: "hacs/action@d556e736723344f83838d08488c983a15381059a" # v22.5.0
         with:
-          category: "integration"
+          fetch-depth: 2
+
+      - name: "Set up uv"
+        uses: "astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2" # v10.3.3
+
+      - name: "Install dependencies"
+        run: uv sync --frozen
+
+      - name: "Run pre-commit hooks"
+        env:
+          SKIP: ruff-check,ruff-format,codespell,mypy
+        run: uv run pre-commit run --all-files --show-diff-on-failure
+
+      - name: "Check conventional commit message"
+        env:
+          COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git log -1 --pretty=%B "$COMMIT_SHA" > .git/COMMIT_EDITMSG
+          uv run pre-commit run conventional-pre-commit --hook-stage commit-msg --commit-msg-filename .git/COMMIT_EDITMSG
 
   lint:
     name: "Ruff & Codespell"
@@ -90,3 +95,24 @@ jobs:
       - name: "Run pytest"
         run: uv run pytest
 
+  hassfest:
+    name: "Hassfest Validation"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
+
+      - name: "Run hassfest validation"
+        uses: "home-assistant/actions/hassfest@26d56ed1a1cbfeabf59feb7b26e368e13f47ef52" # master
+
+  hacs:
+    name: "HACS Validation"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
+
+      - name: "Run HACS validation"
+        uses: "hacs/action@d556e736723344f83838d08488c983a15381059a" # v22.5.0
+        with:
+          category: "integration"
