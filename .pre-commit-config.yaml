@@ -55,7 +55,7 @@ repos:
         name: check-release-version
         entry: uv run python -c
         language: system
-        files: ^(custom_components/gude_pdu/manifest\.json|pyproject\.toml)$
+        files: ^(custom_components/gude_pdu/manifest\.json|pyproject\.toml|\.release-please-manifest\.json)$
         pass_filenames: false
         args:
           - |
@@ -90,8 +90,18 @@ repos:
                     f"Error: pyproject.toml version '{pyproject_version}' is not a valid semantic version."
                 )
 
-            if manifest_version != pyproject_version:
+            release_please = json.loads(
+                Path(".release-please-manifest.json").read_text()
+            )
+            rp_version = release_please.get(".")
+            if not isinstance(rp_version, str) or not semver_re.match(rp_version):
                 sys.exit(
-                    f"Error: manifest.json version '{manifest_version}' does not match "
-                    f"pyproject.toml version '{pyproject_version}'."
+                    f"Error: .release-please-manifest.json version '{rp_version}' is not a valid semantic version."
+                )
+
+            if len({manifest_version, pyproject_version, rp_version}) != 1:
+                sys.exit(
+                    "Error: Version mismatch between manifest.json "
+                    f"('{manifest_version}'), pyproject.toml ('{pyproject_version}'), "
+                    f"and .release-please-manifest.json ('{rp_version}')."
                 )

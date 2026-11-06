@@ -149,10 +149,10 @@ uv run mypy custom_components/gude_pdu tests
 
 ### Pre-commit Hooks
 
-A `.pre-commit-config.yaml` configuration is included to automatically run `ruff` (linting and formatting), `codespell`, `mypy`, and release version checks before each commit:
+A `.pre-commit-config.yaml` configuration is included to automatically run `ruff` (linting and formatting), `codespell`, `mypy`, release version checks, and [Conventional Commits](https://www.conventionalcommits.org/) commit message validation (`conventional-pre-commit`) before each commit:
 
 ```bash
-# Install the git pre-commit hook
+# Install the git pre-commit and commit-msg hooks
 uv run pre-commit install
 
 # Run all pre-commit hooks manually across all files
@@ -184,18 +184,11 @@ docker run --rm --platform linux/amd64 \
 
 ### Releases
 
-Releases are automated via `.github/workflows/release.yaml` following the [Home Assistant Marketplace Releases Guide](https://contributors.home-assistant.io/marketplace/guides/releases/):
+Releases are automated via `.github/workflows/release.yaml` using [`googleapis/release-please-action`](https://github.com/googleapis/release-please-action) following the [Home Assistant Marketplace Releases Guide](https://contributors.home-assistant.io/marketplace/guides/releases/):
 
-1. Update `"version"` in `custom_components/gude_pdu/manifest.json` and `version` in `pyproject.toml` (and `"homeassistant"` in `hacs.json` if the minimum required Home Assistant version changed).
-2. Commit and push the version bump to `main`.
-3. Tag the commit with a `v`-prefixed version matching `manifest.json` and push the tag:
-
-```bash
-git tag v0.1.0
-git push origin v0.1.0
-```
-
-Pushing a `v*` tag runs the full CI validation suite (`hassfest`, `hacs`, `ruff`, `codespell`, `mypy`, and `pytest`), verifies that the tag matches `manifest.json` and `pyproject.toml`, and publishes a GitHub Release with generated release notes (automatically marking `a`/`b`/`rc`/`alpha`/`beta`/`dev` tags as pre-releases).
+1. Commit changes to `main` using [Conventional Commits](https://www.conventionalcommits.org/) (e.g., `fix: ...` for patch releases, `feat: ...` for minor releases, or `feat!: ...` / `BREAKING CHANGE:` for breaking changes).
+2. Release Please automatically opens or updates a Release PR on `main` that bumps the version across `pyproject.toml`, `custom_components/gude_pdu/manifest.json`, `uv.lock`, and `.release-please-manifest.json`, and updates `CHANGELOG.md`.
+3. Merging the Release PR automatically tags the commit (`vX.Y.Z`) and publishes the GitHub Release.
 
 ## Architecture & API References
 
