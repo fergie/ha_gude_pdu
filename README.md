@@ -22,7 +22,7 @@ This integration supports GUDE Systems Expert Power Control (EPC) and Expert Sen
   - Current & Residual Current (A)
   - Active Power (W)
   - Apparent Power (VA, disabled by default)
-  - Reactive Power (VAR, disabled by default)
+  - Reactive Power (var, disabled by default)
   - Energy Meters (kWh with `SensorStateClass.TOTAL_INCREASING`)
   - Frequency (Hz) & Power Factor
 - **Environmental Telemetry**: Ambient temperature (°C), relative humidity (%), and atmospheric pressure (hPa) for connected GUDE sensor modules (e.g., 7101 / 7104 / 7105 / 7106).

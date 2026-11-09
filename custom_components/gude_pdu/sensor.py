@@ -11,6 +11,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.const import (
+    DEGREE,
     PERCENTAGE,
     EntityCategory,
     UnitOfApparentPower,
@@ -20,6 +21,7 @@ from homeassistant.const import (
     UnitOfFrequency,
     UnitOfPower,
     UnitOfPressure,
+    UnitOfReactiveEnergy,
     UnitOfReactivePower,
     UnitOfTemperature,
     UnitOfTime,
@@ -95,10 +97,40 @@ _UNIT_SENSOR_MAP: dict[
         UnitOfReactivePower.VOLT_AMPERE_REACTIVE,
         SensorStateClass.MEASUREMENT,
     ),
+    "Var": (
+        SensorDeviceClass.REACTIVE_POWER,
+        UnitOfReactivePower.VOLT_AMPERE_REACTIVE,
+        SensorStateClass.MEASUREMENT,
+    ),
+    "VAr": (
+        SensorDeviceClass.REACTIVE_POWER,
+        UnitOfReactivePower.VOLT_AMPERE_REACTIVE,
+        SensorStateClass.MEASUREMENT,
+    ),
+    "var": (
+        SensorDeviceClass.REACTIVE_POWER,
+        UnitOfReactivePower.VOLT_AMPERE_REACTIVE,
+        SensorStateClass.MEASUREMENT,
+    ),
     "Hz": (
         SensorDeviceClass.FREQUENCY,
         UnitOfFrequency.HERTZ,
         SensorStateClass.MEASUREMENT,
+    ),
+    "deg": (
+        None,
+        DEGREE,
+        SensorStateClass.MEASUREMENT,
+    ),
+    "°": (
+        None,
+        DEGREE,
+        SensorStateClass.MEASUREMENT,
+    ),
+    "s": (
+        SensorDeviceClass.DURATION,
+        UnitOfTime.SECONDS,
+        SensorStateClass.TOTAL_INCREASING,
     ),
     "kWh": (
         SensorDeviceClass.ENERGY,
@@ -106,8 +138,23 @@ _UNIT_SENSOR_MAP: dict[
         SensorStateClass.TOTAL_INCREASING,
     ),
     "kVARh": (
-        None,
-        "kVARh",
+        SensorDeviceClass.REACTIVE_ENERGY,
+        UnitOfReactiveEnergy.KILO_VOLT_AMPERE_REACTIVE_HOUR,
+        SensorStateClass.TOTAL_INCREASING,
+    ),
+    "kVarh": (
+        SensorDeviceClass.REACTIVE_ENERGY,
+        UnitOfReactiveEnergy.KILO_VOLT_AMPERE_REACTIVE_HOUR,
+        SensorStateClass.TOTAL_INCREASING,
+    ),
+    "kVArh": (
+        SensorDeviceClass.REACTIVE_ENERGY,
+        UnitOfReactiveEnergy.KILO_VOLT_AMPERE_REACTIVE_HOUR,
+        SensorStateClass.TOTAL_INCREASING,
+    ),
+    "kvarh": (
+        SensorDeviceClass.REACTIVE_ENERGY,
+        UnitOfReactiveEnergy.KILO_VOLT_AMPERE_REACTIVE_HOUR,
         SensorStateClass.TOTAL_INCREASING,
     ),
 }
@@ -170,6 +217,24 @@ _NAME_SUBSTRING_SENSOR_MAP: tuple[
         SensorStateClass.MEASUREMENT,
     ),
     (
+        "phaseiu",
+        None,
+        DEGREE,
+        SensorStateClass.MEASUREMENT,
+    ),
+    (
+        "relativetime",
+        SensorDeviceClass.DURATION,
+        UnitOfTime.SECONDS,
+        SensorStateClass.TOTAL_INCREASING,
+    ),
+    (
+        "reactenergy",
+        SensorDeviceClass.REACTIVE_ENERGY,
+        UnitOfReactiveEnergy.KILO_VOLT_AMPERE_REACTIVE_HOUR,
+        SensorStateClass.TOTAL_INCREASING,
+    ),
+    (
         "energy",
         SensorDeviceClass.ENERGY,
         UnitOfEnergy.KILO_WATT_HOUR,
@@ -182,6 +247,76 @@ _NAME_SUBSTRING_SENSOR_MAP: tuple[
         SensorStateClass.MEASUREMENT,
     ),
 )
+
+_FIELD_NAME_MAP: dict[str, str] = {
+    "voltage": "Voltage",
+    "current": "Current",
+    "frequency": "Frequency",
+    "phaseiu": "Phase Angle",
+    "activepower": "Active Power",
+    "reactivepower": "Reactive Power",
+    "apparentpower": "Apparent Power",
+    "powerfactor": "Power Factor",
+    "absactenergynonres": "Active Energy (total)",
+    "absactenergyres": "Active Energy (resettable)",
+    "fwdactenergynonres": "Forward Active Energy (total)",
+    "fwdactenergyres": "Forward Active Energy (resettable)",
+    "revactenergynonres": "Reverse Active Energy (total)",
+    "revactenergyres": "Reverse Active Energy (resettable)",
+    "absreactenergynonres": "Reactive Energy (total)",
+    "absreactenergyres": "Reactive Energy (resettable)",
+    "fwdreactenergynonres": "Forward Reactive Energy (total)",
+    "fwdreactenergyres": "Forward Reactive Energy (resettable)",
+    "revreactenergynonres": "Reverse Reactive Energy (total)",
+    "revreactenergyres": "Reverse Reactive Energy (resettable)",
+    "relativetime": "Relative Time",
+    "residualcurrent": "Residual Current",
+    "residual current": "Residual Current",
+}
+
+_DISPLAY_UNIT_MAP: dict[str, str] = {
+    "deg C": UnitOfTemperature.CELSIUS,
+    "C": UnitOfTemperature.CELSIUS,
+    "deg": DEGREE,
+    "VAR": UnitOfReactivePower.VOLT_AMPERE_REACTIVE,
+    "Var": UnitOfReactivePower.VOLT_AMPERE_REACTIVE,
+    "VAr": UnitOfReactivePower.VOLT_AMPERE_REACTIVE,
+    "kVARh": UnitOfReactiveEnergy.KILO_VOLT_AMPERE_REACTIVE_HOUR,
+    "kVarh": UnitOfReactiveEnergy.KILO_VOLT_AMPERE_REACTIVE_HOUR,
+    "kVArh": UnitOfReactiveEnergy.KILO_VOLT_AMPERE_REACTIVE_HOUR,
+}
+
+_DEFAULT_FIELD_UNIT_MAP: dict[str, str] = {
+    "phaseiu": "°",
+    "relativetime": "s",
+}
+
+
+def _format_field_name(field_name: str, unit: str | None) -> str:
+    """Format a PDU sensor field name with descriptive label and [unit] suffix."""
+    name_lower = field_name.lower()
+    label = _FIELD_NAME_MAP.get(name_lower, field_name)
+    raw_unit = (unit or "").strip()
+    display_unit = _DISPLAY_UNIT_MAP.get(
+        raw_unit, raw_unit or _DEFAULT_FIELD_UNIT_MAP.get(name_lower, "")
+    )
+    if display_unit:
+        return f"{label} [{display_unit}]"
+    return label
+
+
+def _format_sensor_name(sensor: GudeSensorValue, port_index: int | None) -> str:
+    """Build the human-readable sensor entity name."""
+    raw_name = (
+        sensor.name.removeprefix(f"{port_index} ")
+        if port_index is not None
+        else sensor.name
+    )
+    prefix = raw_name.removesuffix(sensor.field_name).rstrip()
+    formatted_field = _format_field_name(sensor.field_name, sensor.unit)
+    if prefix:
+        return f"{prefix} {formatted_field}"
+    return formatted_field
 
 
 def _match_sensor_classification(
@@ -221,7 +356,17 @@ def _determine_sensor_description(sensor: GudeSensorValue) -> SensorEntityDescri
         "vmain",
         "apparentpower",
         "reactivepower",
-    ) and unit not in ("VA", "VAR", "kVARh")
+    ) and unit not in (
+        "VA",
+        "VAR",
+        "Var",
+        "VAr",
+        "var",
+        "kVARh",
+        "kVarh",
+        "kVArh",
+        "kvarh",
+    )
 
     matched = _match_sensor_classification(unit, name_lower)
     if matched is not None:
@@ -305,10 +450,18 @@ class GudeSensor(GudeEntity, SensorEntity):
         self.entity_description = description
         formatted_mac = dr.format_mac(coordinator.data.device_info.mac)
         self._attr_unique_id = f"{formatted_mac}_{sensor_id}"
-        if port_index is not None:
-            self._attr_name = sensor.name.removeprefix(f"{port_index} ")
-        else:
-            self._attr_name = sensor.name
+        self._suggested_object_id = (
+            sensor.name.removeprefix(f"{port_index} ")
+            if port_index is not None
+            else sensor.name
+        )
+        self._attr_name = _format_sensor_name(sensor, port_index)
+
+    @property
+    @override
+    def suggested_object_id(self) -> str | None:
+        """Return suggested object id based on the raw API sensor name."""
+        return self._suggested_object_id
 
     @property
     @override
