@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1](https://github.com/fergie/ha_gude_pdu/compare/v0.2.0...v0.2.1) (2026-11-09)
+
+
+### Bug Fixes
+
+* Improve naming clarity and unit handling on sensors ([#3](https://github.com/fergie/ha_gude_pdu/issues/3)) ([8079f7e](https://github.com/fergie/ha_gude_pdu/commit/8079f7e61a19cde5bf1fc925d2826475f86ea696))
+* Use integration-specific HTTP client session ([#2](https://github.com/fergie/ha_gude_pdu/issues/2)) ([e73fff4](https://github.com/fergie/ha_gude_pdu/commit/e73fff465bcd8b580d246b9d83ec35217ba17b97))
+
 ## [0.2.0](https://github.com/fergie/ha_gude_pdu/compare/v0.1.2...v0.2.0) (2026-11-06)
 
 
