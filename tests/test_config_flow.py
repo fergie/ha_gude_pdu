@@ -11,7 +11,7 @@ from custom_components.gude_pdu.api import (
     GudeClient,
     GudeConnectionError,
 )
-from custom_components.gude_pdu.const import DOMAIN
+from custom_components.gude_pdu.const import CONF_USE_OUTLET_NAMES, DOMAIN
 from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
@@ -233,12 +233,14 @@ async def test_reconfigure_flow_success(
             **MOCK_CONFIG_ENTRY_DATA,
             CONF_HOST: "192.168.1.200",
             CONF_PORT: 8080,
+            CONF_USE_OUTLET_NAMES: False,
         },
     )
     assert result["type"] is FlowResultType.ABORT
     assert result["reason"] == "reconfigure_successful"
     assert mock_config_entry.data[CONF_HOST] == "192.168.1.200"
     assert mock_config_entry.data[CONF_PORT] == 8080
+    assert mock_config_entry.data[CONF_USE_OUTLET_NAMES] is False
 
 
 async def test_reconfigure_flow_different_device(

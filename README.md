@@ -16,7 +16,7 @@ This integration supports GUDE Systems Expert Power Control (EPC) and Expert Sen
 
 ## Features & Supported Functions
 
-- **Outlet Child Devices & Switching**: Each switchable power port (`Outlet 1` .. `Outlet N`) is registered as a Home Assistant child device under the main PDU device, exposing an individual switch entity (`SwitchDeviceClass.OUTLET`) with real-time state feedback and any per-outlet telemetry sensors.
+- **Outlet Child Devices & Switching**: Each switchable power port is registered as a Home Assistant child device under the main PDU device (named using the port number and custom port name from the GUDE API such as `1: Switch`, or localised `Outlet 1` .. `Outlet N` when disabled or unnamed), exposing an individual switch entity (`SwitchDeviceClass.OUTLET`) with real-time state feedback and any per-outlet telemetry sensors. Entity IDs always use the port number (e.g., `switch.epc8041_outlet_1`) regardless of the display name, so renaming outlets never breaks dashboards or automations.
 - **Electrical Telemetry**: Automatic discovery of line, residual, and port sensors:
   - Voltage (V)
   - Current & Residual Current (A)
@@ -32,7 +32,7 @@ This integration supports GUDE Systems Expert Power Control (EPC) and Expert Sen
 
 ## Data Updates
 
-The integration polls the PDU locally (`local_polling`) every **30 seconds** for updated outlet states, electrical measurements, environmental sensors, and system diagnostics. When an outlet switch is toggled in Home Assistant, the integration immediately sends the command and triggers a coordinator refresh.
+The integration polls the PDU locally (`local_polling`) every **30 seconds** for updated outlet states, electrical measurements, environmental sensors, and system diagnostics. When **Use outlet names from device** is enabled, any outlet name changes made in the GUDE web UI are automatically synced to the child device display names and entity friendly names on the next poll (while keeping `entity_id`s unchanged). When an outlet switch is toggled in Home Assistant, the integration immediately sends the command and triggers a coordinator refresh.
 
 ## Installation
 
@@ -64,6 +64,7 @@ The integration polls the PDU locally (`local_polling`) every **30 seconds** for
 | **Verify SSL certificate** | Validate the PDU's TLS certificate against trusted CA certificates. Disable for self-signed certificates. | `false` |
 | **Username** | Username for HTTP Basic or Session authentication (if enabled on the PDU). | *(Optional)* |
 | **Password** | Password for HTTP Basic or Session authentication. | *(Optional)* |
+| **Use outlet names from device** | Name outlet child devices using the custom port names configured on the GUDE PDU (e.g., `1: Switch`) instead of generic numbered names (e.g., `Outlet 1`). Entity IDs always remain numbered (`outlet_1` .. `outlet_N`). | `true` |
 
 ## Removal Instructions
 

@@ -6,6 +6,7 @@
       'password': '**REDACTED**',
       'port': 80,
       'ssl': False,
+      'use_outlet_names': True,
       'username': '**REDACTED**',
       'verify_ssl': False,
     }),

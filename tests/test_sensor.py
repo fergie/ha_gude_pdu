@@ -283,7 +283,10 @@ async def test_outlet_sensors_attached_to_child_device(
     outlet_power = hass.states.get("sensor.epc8041_outlet_1_activepower")
     assert outlet_power is not None
     assert outlet_power.state == "42.5"
-    assert outlet_power.attributes.get("friendly_name") == "Outlet 1 Active Power [W]"
+    assert (
+        outlet_power.attributes.get("friendly_name")
+        == "1: Power Port 1 Active Power [W]"
+    )
 
     entry = entity_registry.async_get("sensor.epc8041_outlet_1_activepower")
     assert entry is not None
@@ -292,6 +295,7 @@ async def test_outlet_sensors_attached_to_child_device(
     child_device = device_registry.async_get(entry.device_id)
     assert isinstance(child_device, dr.ChildDeviceEntry)
     assert child_device.identifiers == {(DOMAIN, "00:19:32:01:a3:3e_port_1")}
+    assert child_device.name == "1: Power Port 1"
 
 
 def test_get_sensor_port_index() -> None:

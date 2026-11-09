@@ -274,7 +274,8 @@ class GudeClient:
         for idx, out in enumerate(outputs_list, start=1):
             if not isinstance(out, dict):
                 continue
-            name = out.get("name") or f"Port {idx}"
+            raw_name = out.get("name")
+            name = raw_name.strip() if isinstance(raw_name, str) else ""
             state = bool(out.get("state", 0))
             out_type = int(out.get("type", 1))
             outputs[idx] = GudeOutlet(

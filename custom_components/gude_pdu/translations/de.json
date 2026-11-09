@@ -29,6 +29,7 @@
           "password": "Passwort",
           "port": "Port",
           "ssl": "Verwendet ein SSL-Zertifikat",
+          "use_outlet_names": "Steckdosennamen vom Gerät übernehmen",
           "username": "Benutzername",
           "verify_ssl": "SSL-Zertifikat überprüfen"
         },
@@ -37,6 +38,7 @@
           "password": "Das Passwort für die Weboberfläche der GUDE PDU.",
           "port": "Die HTTP- oder HTTPS-Portnummer der GUDE PDU.",
           "ssl": "Gibt an, ob HTTPS für die Verbindung zur GUDE PDU verwendet werden soll.",
+          "use_outlet_names": "Gibt an, ob für die Steckdosen die auf der GUDE PDU konfigurierten Namen (z. B. '1: Switch') anstelle von generischen nummerierten Namen verwendet werden sollen.",
           "username": "Der Benutzername für die Weboberfläche der GUDE PDU.",
           "verify_ssl": "Gibt an, ob das SSL-Zertifikat überprüft werden soll."
         },
@@ -48,6 +50,7 @@
           "password": "Passwort",
           "port": "Port",
           "ssl": "Verwendet ein SSL-Zertifikat",
+          "use_outlet_names": "Steckdosennamen vom Gerät übernehmen",
           "username": "Benutzername",
           "verify_ssl": "SSL-Zertifikat überprüfen"
         },
@@ -56,6 +59,7 @@
           "password": "Das Passwort für die Weboberfläche der GUDE PDU.",
           "port": "Die HTTP- oder HTTPS-Portnummer der GUDE PDU.",
           "ssl": "Gibt an, ob HTTPS für die Verbindung zur GUDE PDU verwendet werden soll.",
+          "use_outlet_names": "Gibt an, ob für die Steckdosen die auf der GUDE PDU konfigurierten Namen (z. B. '1: Switch') anstelle von generischen nummerierten Namen verwendet werden sollen.",
           "username": "Der Benutzername für die Weboberfläche der GUDE PDU.",
           "verify_ssl": "Gibt an, ob das SSL-Zertifikat überprüft werden soll."
         },

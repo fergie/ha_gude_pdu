@@ -29,6 +29,7 @@
           "password": "Password",
           "port": "Port",
           "ssl": "Uses an SSL certificate",
+          "use_outlet_names": "Use outlet names from device",
           "username": "Username",
           "verify_ssl": "Verify SSL certificate"
         },
@@ -37,6 +38,7 @@
           "password": "The password for the GUDE PDU web interface.",
           "port": "The HTTP or HTTPS port number of the GUDE PDU.",
           "ssl": "Whether to use HTTPS to connect to the GUDE PDU.",
+          "use_outlet_names": "Whether to name outlets using the names configured on the GUDE PDU (e.g. '1: Switch') instead of generic numbered names.",
           "username": "The username for the GUDE PDU web interface.",
           "verify_ssl": "Whether to verify the SSL certificate."
         },
@@ -48,6 +50,7 @@
           "password": "Password",
           "port": "Port",
           "ssl": "Uses an SSL certificate",
+          "use_outlet_names": "Use outlet names from device",
           "username": "Username",
           "verify_ssl": "Verify SSL certificate"
         },
@@ -56,6 +59,7 @@
           "password": "The password for the GUDE PDU web interface.",
           "port": "The HTTP or HTTPS port number of the GUDE PDU.",
           "ssl": "Whether to use HTTPS to connect to the GUDE PDU.",
+          "use_outlet_names": "Whether to name outlets using the names configured on the GUDE PDU (e.g. '1: Switch') instead of generic numbered names.",
           "username": "The username for the GUDE PDU web interface.",
           "verify_ssl": "Whether to verify the SSL certificate."
         },
