@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/fergie/ha_gude_pdu/compare/v0.2.1...v0.3.0) (2026-11-09)
+
+
+### Features
+
+* Outlet names are now by default synchronised from the API.  This behaviour is configurable via a new setting.  Entity IDs remain unchanged. ([#5](https://github.com/fergie/ha_gude_pdu/issues/5)) ([b817b91](https://github.com/fergie/ha_gude_pdu/commit/b817b91b60e0834de6b03b034c1da20bb314948e))
+
 ## [0.2.1](https://github.com/fergie/ha_gude_pdu/compare/v0.2.0...v0.2.1) (2026-11-09)
 
 
