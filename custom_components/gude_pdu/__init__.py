@@ -47,6 +47,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: GudeConfigEntry) -> bool
     )
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    coordinator.async_update_outlet_device_names()
     return True
 
 

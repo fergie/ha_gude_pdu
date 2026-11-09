@@ -1,8 +1,10 @@
 """Constants for GUDE PDU tests."""  # codespell:ignore gude
 
 from custom_components.gude_pdu.const import (
+    CONF_USE_OUTLET_NAMES,
     DEFAULT_PORT,
     DEFAULT_SSL,
+    DEFAULT_USE_OUTLET_NAMES,
     DEFAULT_VERIFY_SSL,
 )
 from homeassistant.const import (
@@ -28,4 +30,5 @@ MOCK_CONFIG_ENTRY_DATA = {
     CONF_VERIFY_SSL: DEFAULT_VERIFY_SSL,
     CONF_USERNAME: MOCK_USERNAME,
     CONF_PASSWORD: MOCK_PASSWORD,
+    CONF_USE_OUTLET_NAMES: DEFAULT_USE_OUTLET_NAMES,
 }

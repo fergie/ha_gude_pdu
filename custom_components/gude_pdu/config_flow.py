@@ -24,7 +24,14 @@ from homeassistant.helpers.selector import (
 )
 
 from .api import GudeAuthError, GudeClient, GudeConnectionError
-from .const import DEFAULT_PORT, DEFAULT_SSL, DEFAULT_VERIFY_SSL, DOMAIN
+from .const import (
+    CONF_USE_OUTLET_NAMES,
+    DEFAULT_PORT,
+    DEFAULT_SSL,
+    DEFAULT_USE_OUTLET_NAMES,
+    DEFAULT_VERIFY_SSL,
+    DOMAIN,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -38,6 +45,7 @@ STEP_USER_DATA_SCHEMA = Schema(
         Optional(CONF_PASSWORD): TextSelector(
             TextSelectorConfig(type=TextSelectorType.PASSWORD)
         ),
+        Optional(CONF_USE_OUTLET_NAMES, default=DEFAULT_USE_OUTLET_NAMES): bool,
     }
 )
 
@@ -211,6 +219,12 @@ class GudeConfigFlow(ConfigFlow, domain=DOMAIN):
                         CONF_PASSWORD,
                         default=reconfigure_entry.data.get(CONF_PASSWORD, ""),
                     ): TextSelector(TextSelectorConfig(type=TextSelectorType.PASSWORD)),
+                    Optional(
+                        CONF_USE_OUTLET_NAMES,
+                        default=reconfigure_entry.data.get(
+                            CONF_USE_OUTLET_NAMES, DEFAULT_USE_OUTLET_NAMES
+                        ),
+                    ): bool,
                 }
             ),
             errors=errors,
