@@ -16,7 +16,7 @@ from homeassistant.const import (
     CONF_VERIFY_SSL,
 )
 from homeassistant.helpers import device_registry as dr
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from homeassistant.helpers.selector import (
     TextSelector,
     TextSelectorConfig,
@@ -61,7 +61,7 @@ class GudeConfigFlow(ConfigFlow, domain=DOMAIN):
                 port=user_input.get(CONF_PORT, DEFAULT_PORT),
                 ssl=user_input.get(CONF_SSL, DEFAULT_SSL),
                 verify_ssl=verify_ssl,
-                session=async_get_clientsession(self.hass, verify_ssl=verify_ssl),
+                session=async_create_clientsession(self.hass, verify_ssl=verify_ssl),
                 username=user_input.get(CONF_USERNAME),
                 password=user_input.get(CONF_PASSWORD),
             )
@@ -109,7 +109,7 @@ class GudeConfigFlow(ConfigFlow, domain=DOMAIN):
                 port=reauth_entry.data.get(CONF_PORT, DEFAULT_PORT),
                 ssl=reauth_entry.data.get(CONF_SSL, DEFAULT_SSL),
                 verify_ssl=verify_ssl,
-                session=async_get_clientsession(self.hass, verify_ssl=verify_ssl),
+                session=async_create_clientsession(self.hass, verify_ssl=verify_ssl),
                 username=user_input.get(CONF_USERNAME),
                 password=user_input.get(CONF_PASSWORD),
             )
@@ -159,7 +159,7 @@ class GudeConfigFlow(ConfigFlow, domain=DOMAIN):
                 port=user_input.get(CONF_PORT, DEFAULT_PORT),
                 ssl=user_input.get(CONF_SSL, DEFAULT_SSL),
                 verify_ssl=verify_ssl,
-                session=async_get_clientsession(self.hass, verify_ssl=verify_ssl),
+                session=async_create_clientsession(self.hass, verify_ssl=verify_ssl),
                 username=user_input.get(CONF_USERNAME),
                 password=user_input.get(CONF_PASSWORD),
             )

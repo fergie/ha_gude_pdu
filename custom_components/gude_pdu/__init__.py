@@ -10,7 +10,7 @@ from homeassistant.const import (
     Platform,
 )
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
 from .api import GudeClient
 from .const import DEFAULT_PORT, DEFAULT_SSL, DEFAULT_VERIFY_SSL
@@ -24,7 +24,7 @@ PLATFORMS: list[Platform] = [
 
 async def async_setup_entry(hass: HomeAssistant, entry: GudeConfigEntry) -> bool:
     """Set up GUDE PDU from a config entry."""  # codespell:ignore gude
-    session = async_get_clientsession(
+    session = async_create_clientsession(
         hass, verify_ssl=entry.data.get(CONF_VERIFY_SSL, DEFAULT_VERIFY_SSL)
     )
 
